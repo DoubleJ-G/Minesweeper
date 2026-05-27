@@ -6,7 +6,7 @@ describe("App", () => {
   it("renders the App component", () => {
     render(<App />);
 
-    const el = screen.getByText("Hello World");
+    const el = screen.getByText("Minesweeper");
 
     expect(el).toBeDefined();
   });

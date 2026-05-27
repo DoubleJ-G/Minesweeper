@@ -5,7 +5,7 @@ runs:
   steps:
     - uses: pnpm/action-setup@v2
       with:
-        version: 8
+        version: 11
 
     - uses: actions/setup-node@v4
       with:
@@ -13,3 +13,4 @@ runs:
         cache: 'pnpm'
 
     - run: pnpm install
+      shell: bash

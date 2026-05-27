@@ -5,8 +5,10 @@ import reactRefresh from "eslint-plugin-react-refresh";
 import tseslint from "typescript-eslint";
 import { defineConfig, globalIgnores } from "eslint/config";
 
+const ignores = ["dist", "coverage"];
+
 export default defineConfig([
-  globalIgnores(["dist"]),
+  globalIgnores(ignores),
   {
     files: ["**/*.{ts,tsx}"],
     extends: [

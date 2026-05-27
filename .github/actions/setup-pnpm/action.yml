@@ -3,14 +3,14 @@ name: Setup pnpm
 runs:
   using: composite
   steps:
-    - uses: pnpm/action-setup@v4
+    - uses: pnpm/action-setup@v6
       with:
         version: 11
+        cache: true
 
     - uses: actions/setup-node@v4
       with:
         node-version-file: ".nvmrc"
-        cache: "pnpm"
 
     - run: pnpm install
       shell: bash

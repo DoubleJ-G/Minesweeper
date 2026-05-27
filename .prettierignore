@@ -1,3 +1,9 @@
 # Ignore artifacts:
 dist
 coverage
+
+# Ignore file types
+**/*.md
+
+# Ignore specific files
+pnpm-lock.yaml

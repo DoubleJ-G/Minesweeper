@@ -8,7 +8,13 @@ function App() {
           <h1 className="text-5xl font-bold">Minesweeper</h1>
         </div>
         <div>
-          <Board />
+          <Board
+            config={{
+              rows: 9,
+              columns: 9,
+              mines: 10,
+            }}
+          />
         </div>
       </div>
     </main>

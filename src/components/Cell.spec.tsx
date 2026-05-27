@@ -7,10 +7,13 @@ describe("Cell", () => {
   const defaultProps = {
     onReveal: vi.fn(),
     onFlag: vi.fn(),
+    onChord: vi.fn(),
     isMine: false,
     revealed: false,
     flagged: false,
     value: 0,
+    row: 0,
+    column: 0,
   };
 
   it("renders as a button", () => {

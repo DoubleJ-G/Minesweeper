@@ -18,18 +18,20 @@ export const getNeighbors = (
 ): [number, number][] => {
   const neighbors: [number, number][] = [];
 
-  for (let x = -1; x <= 1; x++) {
-    for (let y = -1; y <= 1; y++) {
-      if (x === 0 && y === 0) continue;
-      const neighourRow = row + x;
-      const neighbourCol = col + y;
+  for (let rowOffset = -1; rowOffset <= 1; rowOffset++) {
+    for (let colOffset = -1; colOffset <= 1; colOffset++) {
+      if (rowOffset === 0 && colOffset === 0) {
+        continue;
+      }
+      const neighbourRow = row + rowOffset;
+      const neighbourCol = col + colOffset;
       if (
-        neighourRow >= 0 &&
-        neighourRow < rows &&
+        neighbourRow >= 0 &&
+        neighbourRow < rows &&
         neighbourCol >= 0 &&
         neighbourCol < cols
       ) {
-        neighbors.push([neighourRow, neighbourCol]);
+        neighbors.push([neighbourRow, neighbourCol]);
       }
     }
   }
@@ -66,8 +68,8 @@ export const calculateValues = (
   rows: number,
   cols: number,
 ): CellData[][] => {
-  return board.map((r, row) =>
-    r.map((cell, col) => {
+  return board.map((rowCells, row) =>
+    rowCells.map((cell, col) => {
       if (cell.isMine) {
         return cell;
       }
@@ -76,7 +78,7 @@ export const calculateValues = (
         ([neighbourRow, neighbourCol]) =>
           board[neighbourRow][neighbourCol].isMine,
       ).length;
-      return { ...cell, value: value };
+      return { ...cell, value };
     }),
   );
 };
@@ -141,8 +143,9 @@ export const chordReveal = (
     if (
       next[neighbourRow][neighbourColumn].revealed ||
       next[neighbourRow][neighbourColumn].flagged
-    )
+    ) {
       continue;
+    }
 
     if (next[neighbourRow][neighbourColumn].isMine) {
       hitMine = true;

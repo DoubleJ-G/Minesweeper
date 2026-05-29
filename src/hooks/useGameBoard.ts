@@ -35,12 +35,14 @@ export const useGameBoard = (config: MinesweeperConfig) => {
           setFirstClick(false);
         }
 
-        if (next[row][col].flagged) return next;
+        if (next[row][col].flagged) {
+          return next;
+        }
 
         if (next[row][col].isMine) {
-          setStatus("lost");
-          return next.map((row) =>
-            row.map((cell) =>
+          setStatus(GameStatus.Lost);
+          return next.map((r) =>
+            r.map((cell) =>
               cell.isMine ? { ...cell, revealed: true } : cell,
             ),
           );
@@ -48,7 +50,9 @@ export const useGameBoard = (config: MinesweeperConfig) => {
 
         next = floodReveal(next, row, col, config.rows, config.columns);
 
-        if (checkWin(next)) setStatus("won");
+        if (checkWin(next)) {
+          setStatus(GameStatus.Won);
+        }
 
         return next;
       });
@@ -68,7 +72,7 @@ export const useGameBoard = (config: MinesweeperConfig) => {
       }
 
       setBoard((prev) => {
-        const next = prev.map((row) => row.map((cell) => ({ ...cell })));
+        const next = prev.map((r) => r.map((cell) => ({ ...cell })));
         next[row][col].flagged = !next[row][col].flagged;
         return next;
       });
@@ -84,18 +88,24 @@ export const useGameBoard = (config: MinesweeperConfig) => {
 
   const chord = useCallback(
     (row: number, col: number) => {
-      if (status !== "playing") return;
+      if (status !== GameStatus.Playing) {
+        return;
+      }
 
       setBoard((prev) => {
         const result = chordReveal(prev, row, col, config.rows, config.columns);
-        if (!result) return prev;
+        if (!result) {
+          return prev;
+        }
 
         if (result.hitMine) {
-          setStatus("lost");
+          setStatus(GameStatus.Lost);
           return result.board;
         }
 
-        if (checkWin(result.board)) setStatus("won");
+        if (checkWin(result.board)) {
+          setStatus(GameStatus.Won);
+        }
 
         return result.board;
       });

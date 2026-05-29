@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { Cell } from "./Cell";
 
 describe("Cell", () => {
@@ -12,9 +12,11 @@ describe("Cell", () => {
     revealed: false,
     flagged: false,
     value: 0,
-    row: 0,
-    column: 0,
   };
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
 
   it("renders as a button", () => {
     render(<Cell {...defaultProps} />);
@@ -48,20 +50,16 @@ describe("Cell", () => {
     expect(cell).not.toHaveTextContent("3");
   });
 
-  it("shows a bomb when revealed and is a mine", () => {
+  it("shows a mine when revealed and is a mine", () => {
     render(<Cell {...defaultProps} revealed={true} isMine={true} />);
 
-    const cell = screen.getByRole("button");
-
-    expect(cell).toHaveTextContent("💣");
+    expect(screen.getByTestId("mine-icon")).toBeInTheDocument();
   });
 
   it("shows a flag when flagged", () => {
     render(<Cell {...defaultProps} flagged={true} />);
 
-    const cell = screen.getByRole("button");
-
-    expect(cell).toHaveTextContent("🚩");
+    expect(screen.getByTestId("flag-icon")).toBeInTheDocument();
   });
 
   it("calls onReveal on left click", async () => {

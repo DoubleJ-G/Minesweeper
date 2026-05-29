@@ -9,6 +9,7 @@ export interface MinesweeperConfig {
   mines: number;
   columns: number;
   rows: number;
+  longPressDuration?: number;
 }
 
 export const GameStatus = {

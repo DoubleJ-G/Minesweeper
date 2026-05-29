@@ -32,12 +32,28 @@ describe("Cell", () => {
     expect(cell).toHaveTextContent("3");
   });
 
+  it("shows nothing when revealed with value 0", () => {
+    render(<Cell {...defaultProps} revealed={true} value={0} />);
+
+    const cell = screen.getByRole("button");
+
+    expect(cell).toHaveTextContent("");
+  });
+
   it("shows nothing when unrevealed ", () => {
     render(<Cell {...defaultProps} revealed={false} value={3} />);
 
     const cell = screen.getByRole("button");
 
     expect(cell).not.toHaveTextContent("3");
+  });
+
+  it("shows a bomb when revealed and is a mine", () => {
+    render(<Cell {...defaultProps} revealed={true} isMine={true} />);
+
+    const cell = screen.getByRole("button");
+
+    expect(cell).toHaveTextContent("💣");
   });
 
   it("shows a flag when flagged", () => {
@@ -53,6 +69,18 @@ describe("Cell", () => {
     const handler = vi.fn();
 
     render(<Cell {...defaultProps} onReveal={handler} />);
+
+    const cell = screen.getByRole("button");
+    await user.click(cell);
+
+    expect(handler).toHaveBeenCalled();
+  });
+
+  it("calls onChord on left click when already revealed", async () => {
+    const user = userEvent.setup();
+    const handler = vi.fn();
+
+    render(<Cell {...defaultProps} revealed={true} value={1} onChord={handler} />);
 
     const cell = screen.getByRole("button");
     await user.click(cell);

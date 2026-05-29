@@ -70,14 +70,20 @@ describe("useGameBoard", () => {
     it("no-ops when the game is not playing", () => {
       const { result } = renderHook(() => useGameBoard(config));
 
-      act(() => { result.current.reveal(1, 1); });
-      act(() => { result.current.reveal(0, 0); }); // mine → lost
+      act(() => {
+        result.current.reveal(1, 1);
+      });
+      act(() => {
+        result.current.reveal(0, 0);
+      }); // mine → lost
 
       const snapshot = result.current.board.map((row) =>
         row.map((boardCell) => ({ ...boardCell })),
       );
 
-      act(() => { result.current.reveal(2, 2); }); // should be no-op
+      act(() => {
+        result.current.reveal(2, 2);
+      }); // should be no-op
 
       expect(result.current.board).toEqual(snapshot);
     });
@@ -85,7 +91,9 @@ describe("useGameBoard", () => {
     it("calls placeMines with the clicked cell as the safe coordinates", () => {
       const { result } = renderHook(() => useGameBoard(config));
 
-      act(() => { result.current.reveal(1, 1); });
+      act(() => {
+        result.current.reveal(1, 1);
+      });
 
       expect(vi.mocked(placeMines)).toHaveBeenCalledWith(
         expect.anything(),
@@ -99,7 +107,9 @@ describe("useGameBoard", () => {
     it("reveals the clicked cell after the first click", () => {
       const { result } = renderHook(() => useGameBoard(config));
 
-      act(() => { result.current.reveal(1, 1); });
+      act(() => {
+        result.current.reveal(1, 1);
+      });
 
       expect(result.current.board[1][1].revealed).toBe(true);
     });
@@ -107,9 +117,15 @@ describe("useGameBoard", () => {
     it("does not reveal a flagged cell", () => {
       const { result } = renderHook(() => useGameBoard(config));
 
-      act(() => { result.current.reveal(1, 1); }); // initializes board
-      act(() => { result.current.flag(2, 2); });
-      act(() => { result.current.reveal(2, 2); });
+      act(() => {
+        result.current.reveal(1, 1);
+      }); // initializes board
+      act(() => {
+        result.current.flag(2, 2);
+      });
+      act(() => {
+        result.current.reveal(2, 2);
+      });
 
       expect(result.current.board[2][2].revealed).toBe(false);
     });
@@ -117,8 +133,12 @@ describe("useGameBoard", () => {
     it("sets status to lost when a mine is revealed", () => {
       const { result } = renderHook(() => useGameBoard(config));
 
-      act(() => { result.current.reveal(1, 1); }); // places mines
-      act(() => { result.current.reveal(0, 0); }); // mine
+      act(() => {
+        result.current.reveal(1, 1);
+      }); // places mines
+      act(() => {
+        result.current.reveal(0, 0);
+      }); // mine
 
       expect(result.current.status).toBe("lost");
     });
@@ -126,8 +146,12 @@ describe("useGameBoard", () => {
     it("reveals all mines when a mine is clicked", () => {
       const { result } = renderHook(() => useGameBoard(config));
 
-      act(() => { result.current.reveal(1, 1); });
-      act(() => { result.current.reveal(0, 0); });
+      act(() => {
+        result.current.reveal(1, 1);
+      });
+      act(() => {
+        result.current.reveal(0, 0);
+      });
 
       expect(result.current.board[0][0].revealed).toBe(true);
       expect(result.current.board[0][2].revealed).toBe(true);
@@ -137,11 +161,17 @@ describe("useGameBoard", () => {
       const { result } = renderHook(() => useGameBoard(config));
 
       // (1,1) value=2, reveals only itself
-      act(() => { result.current.reveal(1, 1); });
+      act(() => {
+        result.current.reveal(1, 1);
+      });
       // (2,0) value=0, floods (2,0),(2,1),(2,2),(1,0),(1,2)
-      act(() => { result.current.reveal(2, 0); });
+      act(() => {
+        result.current.reveal(2, 0);
+      });
       // (0,1) value=2, final non-mine cell
-      act(() => { result.current.reveal(0, 1); });
+      act(() => {
+        result.current.reveal(0, 1);
+      });
 
       expect(result.current.status).toBe("won");
     });
@@ -151,10 +181,16 @@ describe("useGameBoard", () => {
     it("no-ops when the game is not playing", () => {
       const { result } = renderHook(() => useGameBoard(config));
 
-      act(() => { result.current.reveal(1, 1); });
-      act(() => { result.current.reveal(0, 0); }); // lost
+      act(() => {
+        result.current.reveal(1, 1);
+      });
+      act(() => {
+        result.current.reveal(0, 0);
+      }); // lost
 
-      act(() => { result.current.flag(2, 2); });
+      act(() => {
+        result.current.flag(2, 2);
+      });
 
       expect(result.current.board[2][2].flagged).toBe(false);
     });
@@ -162,8 +198,12 @@ describe("useGameBoard", () => {
     it("no-ops on an already-revealed cell", () => {
       const { result } = renderHook(() => useGameBoard(config));
 
-      act(() => { result.current.reveal(1, 1); }); // reveals (1,1)
-      act(() => { result.current.flag(1, 1); });
+      act(() => {
+        result.current.reveal(1, 1);
+      }); // reveals (1,1)
+      act(() => {
+        result.current.flag(1, 1);
+      });
 
       expect(result.current.board[1][1].flagged).toBe(false);
     });
@@ -171,7 +211,9 @@ describe("useGameBoard", () => {
     it("flags an unrevealed cell", () => {
       const { result } = renderHook(() => useGameBoard(config));
 
-      act(() => { result.current.flag(0, 0); });
+      act(() => {
+        result.current.flag(0, 0);
+      });
 
       expect(result.current.board[0][0].flagged).toBe(true);
     });
@@ -179,8 +221,12 @@ describe("useGameBoard", () => {
     it("removes a flag when toggled a second time", () => {
       const { result } = renderHook(() => useGameBoard(config));
 
-      act(() => { result.current.flag(0, 0); });
-      act(() => { result.current.flag(0, 0); });
+      act(() => {
+        result.current.flag(0, 0);
+      });
+      act(() => {
+        result.current.flag(0, 0);
+      });
 
       expect(result.current.board[0][0].flagged).toBe(false);
     });
@@ -190,13 +236,19 @@ describe("useGameBoard", () => {
     it("no-ops when the game is not playing", () => {
       const { result } = renderHook(() => useGameBoard(config));
 
-      act(() => { result.current.reveal(1, 1); });
-      act(() => { result.current.reveal(0, 0); }); // lost
+      act(() => {
+        result.current.reveal(1, 1);
+      });
+      act(() => {
+        result.current.reveal(0, 0);
+      }); // lost
 
       const snapshot = result.current.board.map((row) =>
         row.map((boardCell) => ({ ...boardCell })),
       );
-      act(() => { result.current.chord(1, 1); });
+      act(() => {
+        result.current.chord(1, 1);
+      });
 
       expect(result.current.board).toEqual(snapshot);
     });
@@ -204,12 +256,16 @@ describe("useGameBoard", () => {
     it("no-ops when chordReveal returns null (flag count mismatch)", () => {
       const { result } = renderHook(() => useGameBoard(config));
 
-      act(() => { result.current.reveal(1, 1); }); // (1,1) revealed, value=2, no flags
+      act(() => {
+        result.current.reveal(1, 1);
+      }); // (1,1) revealed, value=2, no flags
 
       const snapshot = result.current.board.map((row) =>
         row.map((boardCell) => ({ ...boardCell })),
       );
-      act(() => { result.current.chord(1, 1); }); // 0 flags ≠ value 2 → null
+      act(() => {
+        result.current.chord(1, 1);
+      }); // 0 flags ≠ value 2 → null
 
       expect(result.current.board).toEqual(snapshot);
     });
@@ -217,11 +273,19 @@ describe("useGameBoard", () => {
     it("sets status to lost when chord reveals a mine", () => {
       const { result } = renderHook(() => useGameBoard(config));
 
-      act(() => { result.current.reveal(1, 1); });
+      act(() => {
+        result.current.reveal(1, 1);
+      });
       // Flag wrong cells — actual mines (0,0) and (0,2) left unflagged
-      act(() => { result.current.flag(0, 1); });
-      act(() => { result.current.flag(1, 0); });
-      act(() => { result.current.chord(1, 1); });
+      act(() => {
+        result.current.flag(0, 1);
+      });
+      act(() => {
+        result.current.flag(1, 0);
+      });
+      act(() => {
+        result.current.chord(1, 1);
+      });
 
       expect(result.current.status).toBe("lost");
     });
@@ -232,18 +296,44 @@ describe("useGameBoard", () => {
       // far corner/edges remain unrevealed so checkWin stays false.
       const config4x4: MinesweeperConfig = { rows: 4, columns: 4, mines: 2 };
       const board4x4: CellData[][] = [
-        [cell({ isMine: true }), cell({ value: 1 }), cell({ value: 1 }), cell({ value: 1 })],
-        [cell({ value: 1 }), cell({ value: 1 }), cell({ value: 1 }), cell({ value: 1 })],
-        [cell({ value: 1 }), cell({ value: 1 }), cell({ value: 1 }), cell({ value: 1 })],
-        [cell({ value: 1 }), cell({ value: 1 }), cell({ value: 1 }), cell({ isMine: true })],
+        [
+          cell({ isMine: true }),
+          cell({ value: 1 }),
+          cell({ value: 1 }),
+          cell({ value: 1 }),
+        ],
+        [
+          cell({ value: 1 }),
+          cell({ value: 1 }),
+          cell({ value: 1 }),
+          cell({ value: 1 }),
+        ],
+        [
+          cell({ value: 1 }),
+          cell({ value: 1 }),
+          cell({ value: 1 }),
+          cell({ value: 1 }),
+        ],
+        [
+          cell({ value: 1 }),
+          cell({ value: 1 }),
+          cell({ value: 1 }),
+          cell({ isMine: true }),
+        ],
       ];
       vi.mocked(calculateValues).mockReturnValueOnce(board4x4);
 
       const { result } = renderHook(() => useGameBoard(config4x4));
 
-      act(() => { result.current.reveal(1, 1); }); // value=1, reveals (1,1) only
-      act(() => { result.current.flag(0, 0); });
-      act(() => { result.current.chord(1, 1); }); // 1 flag = value 1, reveals 7 neighbors
+      act(() => {
+        result.current.reveal(1, 1);
+      }); // value=1, reveals (1,1) only
+      act(() => {
+        result.current.flag(0, 0);
+      });
+      act(() => {
+        result.current.chord(1, 1);
+      }); // 1 flag = value 1, reveals 7 neighbors
 
       expect(result.current.status).toBe("playing");
     });
@@ -251,11 +341,21 @@ describe("useGameBoard", () => {
     it("sets status to won when chord reveals the last safe cells", () => {
       const { result } = renderHook(() => useGameBoard(config));
 
-      act(() => { result.current.reveal(1, 1); });   // reveals (1,1)
-      act(() => { result.current.reveal(2, 0); });   // floods (2,0),(2,1),(2,2),(1,0),(1,2)
-      act(() => { result.current.flag(0, 0); });
-      act(() => { result.current.flag(0, 2); });
-      act(() => { result.current.chord(1, 1); });    // reveals (0,1) → win
+      act(() => {
+        result.current.reveal(1, 1);
+      }); // reveals (1,1)
+      act(() => {
+        result.current.reveal(2, 0);
+      }); // floods (2,0),(2,1),(2,2),(1,0),(1,2)
+      act(() => {
+        result.current.flag(0, 0);
+      });
+      act(() => {
+        result.current.flag(0, 2);
+      });
+      act(() => {
+        result.current.chord(1, 1);
+      }); // reveals (0,1) → win
 
       expect(result.current.status).toBe("won");
     });
@@ -265,8 +365,12 @@ describe("useGameBoard", () => {
     it("clears all mines and revealed state", () => {
       const { result } = renderHook(() => useGameBoard(config));
 
-      act(() => { result.current.reveal(1, 1); });
-      act(() => { result.current.reset(); });
+      act(() => {
+        result.current.reveal(1, 1);
+      });
+      act(() => {
+        result.current.reset();
+      });
 
       result.current.board.flat().forEach((boardCell) => {
         expect(boardCell.isMine).toBe(false);
@@ -277,10 +381,16 @@ describe("useGameBoard", () => {
     it("resets status to playing", () => {
       const { result } = renderHook(() => useGameBoard(config));
 
-      act(() => { result.current.reveal(1, 1); });
-      act(() => { result.current.reveal(0, 0); }); // lost
+      act(() => {
+        result.current.reveal(1, 1);
+      });
+      act(() => {
+        result.current.reveal(0, 0);
+      }); // lost
 
-      act(() => { result.current.reset(); });
+      act(() => {
+        result.current.reset();
+      });
 
       expect(result.current.status).toBe("playing");
     });
@@ -288,9 +398,15 @@ describe("useGameBoard", () => {
     it("allows mines to be placed again after reset", () => {
       const { result } = renderHook(() => useGameBoard(config));
 
-      act(() => { result.current.reveal(1, 1); });
-      act(() => { result.current.reset(); });
-      act(() => { result.current.reveal(1, 1); });
+      act(() => {
+        result.current.reveal(1, 1);
+      });
+      act(() => {
+        result.current.reset();
+      });
+      act(() => {
+        result.current.reveal(1, 1);
+      });
 
       expect(vi.mocked(placeMines)).toHaveBeenCalledTimes(2);
     });

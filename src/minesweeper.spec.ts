@@ -35,7 +35,12 @@ describe("createEmptyBoard", () => {
     createEmptyBoard(2, 2)
       .flat()
       .forEach((cell) =>
-        expect(cell).toEqual({ value: 0, isMine: false, revealed: false, flagged: false }),
+        expect(cell).toEqual({
+          value: 0,
+          isMine: false,
+          revealed: false,
+          flagged: false,
+        }),
       );
   });
 
@@ -94,10 +99,10 @@ describe("placeMines", () => {
   it("skips cells that are already mines and keeps trying", () => {
     const board = createEmptyBoard(3, 3);
     vi.spyOn(Math, "random")
-      .mockReturnValueOnce(0)    // mine 1 row: 0
-      .mockReturnValueOnce(0)    // mine 1 col: 0 → placed at (0,0)
-      .mockReturnValueOnce(0)    // mine 2 row: 0 (retry same position)
-      .mockReturnValueOnce(0)    // mine 2 col: 0 → already mine, skip
+      .mockReturnValueOnce(0) // mine 1 row: 0
+      .mockReturnValueOnce(0) // mine 1 col: 0 → placed at (0,0)
+      .mockReturnValueOnce(0) // mine 2 row: 0 (retry same position)
+      .mockReturnValueOnce(0) // mine 2 col: 0 → already mine, skip
       .mockReturnValueOnce(0.34) // mine 2 row: 1
       .mockReturnValueOnce(0.34); // mine 2 col: 1 → placed at (1,1)
     const result = placeMines(board, 2, 2, 2);

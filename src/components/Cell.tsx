@@ -15,7 +15,13 @@ const NUMBER_COLORS: Record<number, string> = {
 
 function FlagIcon() {
   return (
-    <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden data-testid="flag-icon">
+    <svg
+      viewBox="0 0 20 20"
+      width="16"
+      height="16"
+      aria-hidden
+      data-testid="flag-icon"
+    >
       <line
         x1="6"
         y1="2.5"
@@ -41,7 +47,13 @@ function FlagIcon() {
 
 function MineIcon() {
   return (
-    <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden data-testid="mine-icon">
+    <svg
+      viewBox="0 0 20 20"
+      width="18"
+      height="18"
+      aria-hidden
+      data-testid="mine-icon"
+    >
       <g stroke="#1e293b" strokeWidth="1.8" strokeLinecap="round">
         <line x1="10" y1="1.5" x2="10" y2="4.5" />
         <line x1="10" y1="15.5" x2="10" y2="18.5" />

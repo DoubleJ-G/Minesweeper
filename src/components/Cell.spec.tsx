@@ -78,7 +78,9 @@ describe("Cell", () => {
     const user = userEvent.setup();
     const handler = vi.fn();
 
-    render(<Cell {...defaultProps} revealed={true} value={1} onChord={handler} />);
+    render(
+      <Cell {...defaultProps} revealed={true} value={1} onChord={handler} />,
+    );
 
     const cell = screen.getByRole("button");
     await user.click(cell);

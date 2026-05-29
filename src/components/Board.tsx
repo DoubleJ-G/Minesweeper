@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import { Cell } from "./Cell";
 import { useGameBoard } from "../hooks/useGameBoard";
-import { GameStatus, type GameStatusType, type MinesweeperConfig } from "../types";
+import {
+  GameStatus,
+  type GameStatusType,
+  type MinesweeperConfig,
+} from "../types";
 
 interface BoardProps {
   config: MinesweeperConfig;

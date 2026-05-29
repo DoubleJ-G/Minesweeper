@@ -42,9 +42,7 @@ export const useGameBoard = (config: MinesweeperConfig) => {
         if (next[row][col].isMine) {
           setStatus(GameStatus.Lost);
           return next.map((r) =>
-            r.map((cell) =>
-              cell.isMine ? { ...cell, revealed: true } : cell,
-            ),
+            r.map((cell) => (cell.isMine ? { ...cell, revealed: true } : cell)),
           );
         }
 

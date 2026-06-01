@@ -1,5 +1,8 @@
 import { type CellData } from "./types";
 
+const cloneBoard = (board: CellData[][]): CellData[][] =>
+  board.map((row) => row.map((cell) => ({ ...cell })));
+
 export const createEmptyBoard = (rows: number, cols: number): CellData[][] =>
   Array.from({ length: rows }, () =>
     Array.from({ length: cols }, () => ({
@@ -45,9 +48,9 @@ export const placeMines = (
   safeRow: number,
   safeCol: number,
 ): CellData[][] => {
-  const next = board.map((row) => row.map((cell) => ({ ...cell })));
   const rows = board.length;
   const cols = board[0].length;
+  const next = cloneBoard(board);
   let placed = 0;
 
   while (placed < mines) {
@@ -68,19 +71,20 @@ export const calculateValues = (
   rows: number,
   cols: number,
 ): CellData[][] => {
-  return board.map((rowCells, row) =>
-    rowCells.map((cell, col) => {
+  const next = cloneBoard(board);
+  next.forEach((rowCells, row) => {
+    rowCells.forEach((cell, col) => {
       if (cell.isMine) {
-        return cell;
+        return;
       }
       const neighbors = getNeighbors(row, col, rows, cols);
-      const value = neighbors.filter(
+      cell.value = neighbors.filter(
         ([neighbourRow, neighbourCol]) =>
           board[neighbourRow][neighbourCol].isMine,
       ).length;
-      return { ...cell, value };
-    }),
-  );
+    });
+  });
+  return next;
 };
 
 export const floodReveal = (
@@ -90,19 +94,19 @@ export const floodReveal = (
   rows: number,
   cols: number,
 ): CellData[][] => {
-  const next = board.map((r) => r.map((cell) => ({ ...cell })));
+  const next = cloneBoard(board);
   const stack: [number, number][] = [[row, col]];
 
   while (stack.length > 0) {
-    const [row, col] = stack.pop()!;
-    if (next[row][col].revealed || next[row][col].flagged) {
+    const [stackRow, stackCol] = stack.pop()!;
+    if (next[stackRow][stackCol].revealed || next[stackRow][stackCol].flagged) {
       continue;
     }
 
-    next[row][col].revealed = true;
+    next[stackRow][stackCol].revealed = true;
 
-    if (next[row][col].value === 0 && !next[row][col].isMine) {
-      stack.push(...getNeighbors(row, col, rows, cols));
+    if (next[stackRow][stackCol].value === 0 && !next[stackRow][stackCol].isMine) {
+      stack.push(...getNeighbors(stackRow, stackCol, rows, cols));
     }
   }
 
@@ -128,46 +132,54 @@ export const chordReveal = (
 
   const neighbors = getNeighbors(row, col, rows, cols);
   const flagCount = neighbors.filter(
-    ([neighbourRow, neighbourColumn]) =>
-      board[neighbourRow][neighbourColumn].flagged,
+    ([neighbourRow, neighbourCol]) => board[neighbourRow][neighbourCol].flagged,
   ).length;
 
   if (flagCount !== cell.value) {
     return null;
   }
 
-  let next = board.map((row) => row.map((cell) => ({ ...cell })));
   let hitMine = false;
+  const next = cloneBoard(board);
 
-  for (const [neighbourRow, neighbourColumn] of neighbors) {
-    if (
-      next[neighbourRow][neighbourColumn].revealed ||
-      next[neighbourRow][neighbourColumn].flagged
-    ) {
+  for (const [neighbourRow, neighbourCol] of neighbors) {
+    if (next[neighbourRow][neighbourCol].revealed || next[neighbourRow][neighbourCol].flagged) {
       continue;
     }
 
-    if (next[neighbourRow][neighbourColumn].isMine) {
+    if (next[neighbourRow][neighbourCol].isMine) {
       hitMine = true;
       continue;
     }
 
-    next = floodReveal(next, neighbourRow, neighbourColumn, rows, cols);
+    const stack: [number, number][] = [[neighbourRow, neighbourCol]];
+    while (stack.length > 0) {
+      const [stackRow, stackCol] = stack.pop()!;
+      if (next[stackRow][stackCol].revealed || next[stackRow][stackCol].flagged) {
+        continue;
+      }
+      next[stackRow][stackCol].revealed = true;
+      if (next[stackRow][stackCol].value === 0 && !next[stackRow][stackCol].isMine) {
+        stack.push(...getNeighbors(stackRow, stackCol, rows, cols));
+      }
+    }
   }
 
   if (hitMine) {
-    next = next.map((row) =>
-      row.map((column) =>
-        column.isMine ? { ...column, revealed: true } : column,
-      ),
-    );
+    next.forEach((rowCells) => {
+      rowCells.forEach((mineCell) => {
+        if (mineCell.isMine) {
+          mineCell.revealed = true;
+        }
+      });
+    });
   }
 
   return { board: next, hitMine };
 };
 
 export const checkWin = (board: CellData[][]): boolean => {
-  return board.every((row) =>
-    row.every((cell) => cell.isMine || cell.revealed),
+  return board.every((rowCells) =>
+    rowCells.every((cell) => cell.isMine || cell.revealed),
   );
 };

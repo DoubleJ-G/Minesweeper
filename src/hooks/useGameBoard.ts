@@ -41,8 +41,10 @@ export const useGameBoard = (config: MinesweeperConfig) => {
 
         if (next[row][col].isMine) {
           setStatus(GameStatus.Lost);
-          return next.map((r) =>
-            r.map((cell) => (cell.isMine ? { ...cell, revealed: true } : cell)),
+          return next.map((rowCells) =>
+            rowCells.map((cell) =>
+              cell.isMine ? { ...cell, revealed: true } : cell,
+            ),
           );
         }
 
@@ -64,18 +66,20 @@ export const useGameBoard = (config: MinesweeperConfig) => {
         return;
       }
 
-      const cell = board[row][col];
-      if (cell.revealed) {
-        return;
-      }
-
       setBoard((prev) => {
-        const next = prev.map((r) => r.map((cell) => ({ ...cell })));
-        next[row][col].flagged = !next[row][col].flagged;
-        return next;
+        if (prev[row][col].revealed) {
+          return prev;
+        }
+        return prev.map((rowCells, rowIndex) =>
+          rowCells.map((cell, colIndex) =>
+            rowIndex === row && colIndex === col
+              ? { ...cell, flagged: !cell.flagged }
+              : cell,
+          ),
+        );
       });
     },
-    [status, board],
+    [status],
   );
 
   const reset = useCallback(() => {

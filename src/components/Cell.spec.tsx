@@ -5,6 +5,8 @@ import { Cell } from "./Cell";
 
 describe("Cell", () => {
   const defaultProps = {
+    row: 0,
+    col: 0,
     onReveal: vi.fn(),
     onFlag: vi.fn(),
     onChord: vi.fn(),

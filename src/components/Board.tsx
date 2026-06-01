@@ -83,14 +83,16 @@ export function Board({ config }: BoardProps) {
             {row.map((cell, colIndex) => (
               <Cell
                 key={colIndex}
+                row={rowIndex}
+                col={colIndex}
                 value={cell.value}
                 isMine={cell.isMine}
                 revealed={cell.revealed}
                 flagged={cell.flagged}
                 gameStatus={status}
-                onReveal={() => reveal(rowIndex, colIndex)}
-                onFlag={() => flag(rowIndex, colIndex)}
-                onChord={() => chord(rowIndex, colIndex)}
+                onReveal={reveal}
+                onFlag={flag}
+                onChord={chord}
                 longPressDuration={config.longPressDuration}
               />
             ))}

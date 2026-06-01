@@ -1,73 +1,63 @@
-# React + TypeScript + Vite
+# Minesweeper
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A classic Minesweeper game built with React and TypeScript. Live it at [https://minesweeper.jadengregory.com.au](https://minesweeper.jadengregory.com.au).
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **Three difficulty levels** — Beginner (9×9, 10 mines), Intermediate (16×16, 40 mines), and Expert (16×30, 99 mines)
+- **First-click safety** — mines are placed after your first click, so you can never lose on the opening move
+- **Flood reveal** — clicking an empty cell automatically reveals all connected empty cells and their numbered borders
+- **Chord** — click a revealed number when the correct number of adjacent flags are placed to auto-reveal remaining neighbors
+- **Flag support** — right-click on desktop or long-press on mobile to place and remove flags
+- **Fully responsive** — touch-optimised for mobile with long-press flagging and scroll-safe gesture handling
+- **Performance** — individual cells are memoized to avoid unnecessary re-renders on large grids
 
-## React Compiler
+## How to Play
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Reveal a cell** — left-click (or tap on mobile)
+- **Flag a cell** — right-click on desktop (or long-press on mobile)
+- **Chord** — click a revealed number whose adjacent flag count matches its value to reveal all remaining adjacent cells
+- **Reset** — click the emoji button in the header to start a new game
+- **Change difficulty** — buttons above the board control difficulty
 
-## Expanding the ESLint configuration
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Technologies
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+| Tool | Purpose |
+|---|---|
+| [React 19](https://react.dev) | UI framework |
+| [TypeScript](https://www.typescriptlang.org) | Type safety |
+| [Tailwind CSS v4](https://tailwindcss.com) | Styling |
+| [Vitest](https://vitest.dev) | Unit and component testing |
+| [Testing Library](https://testing-library.com) | React component tests |
+| [Prettier](https://prettier.io) | Code formatting |
+| [ESLint](https://eslint.org) | Linting |
+| [pnpm](https://pnpm.io) | Package manager |
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Getting Started
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+To run locally install the dependencies and start the dev server.
+```bash
+# Install dependencies
+pnpm install
+
+# Start the development server
+pnpm dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Open [http://localhost:5173](http://localhost:5173) in your browser.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Scripts
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+| Command | Description |
+|---|---|
+| `pnpm dev` | Start the Vite dev server with hot module replacement |
+| `pnpm build` | Type-check and build for production |
+| `pnpm preview` | Preview the production build locally |
+| `pnpm test` | Run tests in watch mode |
+| `pnpm test:run` | Run tests once |
+| `pnpm test:coverage` | Run tests and generate a coverage report |
+| `pnpm lint` | Lint with ESLint |
+| `pnpm format` | Format all files with Prettier |
+| `pnpm format:check` | Check formatting without writing changes |
+

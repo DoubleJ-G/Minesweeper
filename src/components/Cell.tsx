@@ -1,6 +1,8 @@
-import { useCallback } from "react";
+import { memo, useCallback } from "react";
 import { GameStatus, type GameStatusType } from "../types";
 import { useLongPress } from "../hooks/useLongPress";
+import { FlagIcon } from "./FlagIcon";
+import { MineIcon } from "./MineIcon";
 
 const NUMBER_COLORS: Record<number, string> = {
   1: "text-blue-400",
@@ -13,67 +15,13 @@ const NUMBER_COLORS: Record<number, string> = {
   8: "text-slate-300",
 };
 
-function FlagIcon() {
-  return (
-    <svg
-      viewBox="0 0 20 20"
-      width="16"
-      height="16"
-      aria-hidden
-      data-testid="flag-icon"
-    >
-      <line
-        x1="6"
-        y1="2.5"
-        x2="6"
-        y2="17.5"
-        stroke="#94a3b8"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-      />
-      <line
-        x1="4.5"
-        y1="17.5"
-        x2="7.5"
-        y2="17.5"
-        stroke="#94a3b8"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-      />
-      <polygon points="6,2.5 15.5,6.5 6,10.5" fill="#ef4444" />
-    </svg>
-  );
-}
-
-function MineIcon() {
-  return (
-    <svg
-      viewBox="0 0 20 20"
-      width="18"
-      height="18"
-      aria-hidden
-      data-testid="mine-icon"
-    >
-      <g stroke="#1e293b" strokeWidth="1.8" strokeLinecap="round">
-        <line x1="10" y1="1.5" x2="10" y2="4.5" />
-        <line x1="10" y1="15.5" x2="10" y2="18.5" />
-        <line x1="1.5" y1="10" x2="4.5" y2="10" />
-        <line x1="15.5" y1="10" x2="18.5" y2="10" />
-        <line x1="3.5" y1="3.5" x2="5.6" y2="5.6" />
-        <line x1="16.5" y1="3.5" x2="14.4" y2="5.6" />
-        <line x1="3.5" y1="16.5" x2="5.6" y2="14.4" />
-        <line x1="16.5" y1="16.5" x2="14.4" y2="14.4" />
-      </g>
-      <circle cx="10" cy="10" r="5.5" fill="#1e293b" />
-      <circle cx="8" cy="8" r="1.8" fill="white" opacity="0.35" />
-    </svg>
-  );
-}
 
 type Props = {
-  onReveal: () => void;
-  onFlag: () => void;
-  onChord: () => void;
+  row: number;
+  col: number;
+  onReveal: (row: number, col: number) => void;
+  onFlag: (row: number, col: number) => void;
+  onChord: (row: number, col: number) => void;
   revealed: boolean;
   flagged: boolean;
   isMine: boolean;
@@ -82,7 +30,9 @@ type Props = {
   longPressDuration?: number;
 };
 
-export function Cell({
+export const Cell = memo(function Cell({
+  row,
+  col,
   flagged,
   revealed,
   isMine,
@@ -93,22 +43,23 @@ export function Cell({
   gameStatus = GameStatus.Playing,
   longPressDuration = 200,
 }: Props) {
-  const longPress = useLongPress(onFlag, longPressDuration);
+  const flagCallback = useCallback(() => onFlag(row, col), [onFlag, row, col]);
+  const longPress = useLongPress(flagCallback, longPressDuration);
 
   const handleClick = useCallback(() => {
     if (revealed) {
-      onChord();
+      onChord(row, col);
     } else {
-      onReveal();
+      onReveal(row, col);
     }
-  }, [revealed, onChord, onReveal]);
+  }, [revealed, onChord, onReveal, row, col]);
 
   const handleFlag = useCallback(
     (e: React.MouseEvent) => {
       e.preventDefault();
-      onFlag();
+      onFlag(row, col);
     },
-    [onFlag],
+    [onFlag, row, col],
   );
 
   const isGameOver = gameStatus !== GameStatus.Playing;
@@ -138,7 +89,7 @@ export function Cell({
 
   return (
     <button
-      className={`flex h-9 w-9 items-center justify-center font-mono text-sm font-bold transition-colors duration-75 select-none ${className}`}
+      className={`flex h-9 w-9 items-center justify-center font-mono text-sm font-bold select-none ${className}`}
       onClick={handleClick}
       onContextMenu={handleFlag}
       onTouchStart={longPress.onTouchStart}
@@ -159,4 +110,4 @@ export function Cell({
       {content}
     </button>
   );
-}
+});

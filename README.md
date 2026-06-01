@@ -2,6 +2,8 @@
 
 A classic Minesweeper game built with React and TypeScript. Live it at [https://minesweeper.jadengregory.com.au](https://minesweeper.jadengregory.com.au).
 
+![Screenshot](docs/Screenshot.png)
+
 ## Features
 
 - **Three difficulty levels** — Beginner (9×9, 10 mines), Intermediate (16×16, 40 mines), and Expert (16×30, 99 mines)

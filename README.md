@@ -2,7 +2,9 @@
 
 A classic Minesweeper game built with React and TypeScript. Live it at [https://minesweeper.jadengregory.com.au](https://minesweeper.jadengregory.com.au).
 
-![Screenshot](docs/Screenshot.png)
+<div align="center">
+  <img src="docs/Screenshot.png" alt="Screenshot" />
+</div>
 
 ## Features
 

@@ -15,7 +15,6 @@ const NUMBER_COLORS: Record<number, string> = {
   8: "text-slate-300",
 };
 
-
 type Props = {
   row: number;
   col: number;

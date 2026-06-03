@@ -105,7 +105,10 @@ export const floodReveal = (
 
     next[stackRow][stackCol].revealed = true;
 
-    if (next[stackRow][stackCol].value === 0 && !next[stackRow][stackCol].isMine) {
+    if (
+      next[stackRow][stackCol].value === 0 &&
+      !next[stackRow][stackCol].isMine
+    ) {
       stack.push(...getNeighbors(stackRow, stackCol, rows, cols));
     }
   }
@@ -143,7 +146,10 @@ export const chordReveal = (
   const next = cloneBoard(board);
 
   for (const [neighbourRow, neighbourCol] of neighbors) {
-    if (next[neighbourRow][neighbourCol].revealed || next[neighbourRow][neighbourCol].flagged) {
+    if (
+      next[neighbourRow][neighbourCol].revealed ||
+      next[neighbourRow][neighbourCol].flagged
+    ) {
       continue;
     }
 
@@ -155,11 +161,17 @@ export const chordReveal = (
     const stack: [number, number][] = [[neighbourRow, neighbourCol]];
     while (stack.length > 0) {
       const [stackRow, stackCol] = stack.pop()!;
-      if (next[stackRow][stackCol].revealed || next[stackRow][stackCol].flagged) {
+      if (
+        next[stackRow][stackCol].revealed ||
+        next[stackRow][stackCol].flagged
+      ) {
         continue;
       }
       next[stackRow][stackCol].revealed = true;
-      if (next[stackRow][stackCol].value === 0 && !next[stackRow][stackCol].isMine) {
+      if (
+        next[stackRow][stackCol].value === 0 &&
+        !next[stackRow][stackCol].isMine
+      ) {
         stack.push(...getNeighbors(stackRow, stackCol, rows, cols));
       }
     }

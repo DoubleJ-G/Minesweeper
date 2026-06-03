@@ -13,7 +13,8 @@ function readFromUrl(): DifficultyType {
 }
 
 export function useDifficulty() {
-  const [difficulty, setDifficultyState] = useState<DifficultyType>(readFromUrl);
+  const [difficulty, setDifficultyState] =
+    useState<DifficultyType>(readFromUrl);
 
   const setDifficulty = useCallback((next: DifficultyType) => {
     const params = new URLSearchParams(window.location.search);
